@@ -57,7 +57,7 @@ Full guide: `docs/DEPLOY.md`. TL;DR:
 5. cPanel → SSL/TLS → AutoSSL for subdomain. cPanel → Email Accounts → create `noreply@reddevils.co.in` for OTP mail.
 6. Test: `https://tstory.reddevils.co.in/api/health.php`
 
-Default admin: register `admin@reddevils.co.in` via the site, then run `UPDATE users SET role='admin' WHERE email='admin@reddevils.co.in';` in phpMyAdmin.
+Default admin: `souravbrock@gmail.com` (pre-provisioned; owner completes OTP + password on site, role is preserved).
 
 ## Auth flow (as specified)
 

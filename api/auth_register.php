@@ -7,9 +7,11 @@ send('register', function() {
   if (!filter_var($b['email'], FILTER_VALIDATE_EMAIL)) throw new Exception("invalid email");
   $role = ($b['role'] ?? 'customer'); if (!in_array($role,['customer','vendor'],true)) $role='customer';
   $pdo = db();
-  $ex = $pdo->prepare("SELECT id,is_verified FROM users WHERE email=?"); $ex->execute([$b['email']]);
+  $ex = $pdo->prepare("SELECT id,role,is_verified FROM users WHERE email=?"); $ex->execute([$b['email']]);
   if ($row = $ex->fetch()) {
     if ((int)$row['is_verified']===1) throw new Exception("email already registered. Please login.");
+    // Re-registration: update profile but never demote a pre-provisioned role (e.g. admin).
+    if ($row['role']==='admin') $role = 'admin';
     $pdo->prepare("UPDATE users SET name=?,phone=?,role=?,vendor_type=?,company_name=? WHERE id=?")
       ->execute([$b['name'],$b['phone'],$role,$b['vendor_type']??null,$b['company_name']??null,$row['id']]);
   } else {

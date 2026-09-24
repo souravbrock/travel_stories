@@ -36,11 +36,28 @@ switch ($a) {
   case 'inquire':
     if (empty($b['package_id'])||empty($b['message'])) throw new Exception("package_id + message required");
     $pdo->prepare("INSERT INTO inquiries (package_id,user_id,message) VALUES (?,?,?)")->execute([$b['package_id'],$u['id'],$b['message']]);
+    try {
+      $st = $pdo->prepare("SELECT p.title, a.email AS agent_email, a.company_name FROM packages p LEFT JOIN users a ON a.id=p.agent_id WHERE p.id=?");
+      $st->execute([$b['package_id']]); $pk = $st->fetch();
+      if ($pk && !empty($pk['agent_email'])) {
+        send_booking_mail($pk['agent_email'], "New inquiry for '{$pk['title']}'",
+          "Hello ".($pk['company_name']?:'Agent').",\n\n{$u['name']} ({$u['email']}, {$u['phone']}) asked about '{$pk['title']}':\n\n{$b['message']}\n\n— Travel Stories");
+      }
+    } catch (Throwable $e) { /* mail failure must not break booking flow */ }
     echo json_encode(['ok'=>true,'message'=>'Inquiry sent to agent']); break;
-  case 'save_trip':
+  case 'save_trip': {
     $pdo->prepare("INSERT INTO custom_trips (user_id,origin,transit_mode,booking_pref,vehicle_id,payload,total_estimate) VALUES (?,?,?,?,?,?,?)")
       ->execute([$u['id'],$b['origin']??'',$b['transit_mode']??'train',$b['booking_pref']??'self',($b['vehicle_id']??null)?:null,json_encode($b['payload']??[]),$b['total']??0]);
-    echo json_encode(['ok'=>true,'id'=>$pdo->lastInsertId()]); break;
+    $tid = $pdo->lastInsertId();
+    try {
+      if (($b['booking_pref']??'self')==='platform') {
+        $detail = "Trip #$tid from ".($b['origin']??'')." via ".($b['transit_mode']??'')." for {$u['name']} ({$u['email']}, {$u['phone']}).";
+        send_booking_mail(cfg()['mail']['notify_booking'], "Platform booking lead: trip #$tid", $detail);
+      }
+      send_booking_mail($u['email'], "Your Travel Stories trip #$tid is saved",
+        "Hello {$u['name']},\n\nYour custom trip #$tid from ".($b['origin']??'')." is saved.".((($b['booking_pref']??'self')==='platform')?"\nOur ticketing team will contact you shortly.":"")."\n\n— Travel Stories");
+    } catch (Throwable $e) { /* mail failure must not break booking flow */ }
+    echo json_encode(['ok'=>true,'id'=>$tid]); break; }
   case 'my_listings':
     if (!$isVendor) throw new Exception("vendor only");
     $w = $u['role']==='admin' ? "" : "WHERE agent_id=".(int)$u['id'];

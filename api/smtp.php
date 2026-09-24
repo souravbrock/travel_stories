@@ -1,6 +1,6 @@
 <?php
 // Tiny SMTP sender over ssl/tls sockets (for cPanel email accounts). No dependencies.
-function smtp_send(array $mail, string $to, string $subject, string $body): void {
+function smtp_send(array $mail, string $fromAddr, string $to, string $subject, string $body): void {
   $host = $mail['smtp_host']; $port = (int)$mail['smtp_port'];
   $secure = $mail['smtp_secure'] ?? 'ssl';
   $prefix = $secure === 'ssl' ? 'ssl://' : 'tcp://';
@@ -14,11 +14,11 @@ function smtp_send(array $mail, string $to, string $subject, string $body): void
   $cmd("AUTH LOGIN");
   $cmd(base64_encode($mail['smtp_user']));
   $cmd(base64_encode($mail['smtp_pass']));
-  $from = $mail['smtp_user'];
+  $from = preg_match('/<([^>]+)>/', $fromAddr, $m) ? $m[1] : $fromAddr;
   $cmd("MAIL FROM:<$from>");
   $cmd("RCPT TO:<$to>");
   $cmd("DATA");
-  $headers = "From: {$mail['from']}\r\nTo: <$to>\r\nSubject: $subject\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n";
+  $headers = "From: $fromAddr\r\nTo: <$to>\r\nSubject: $subject\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n";
   fwrite($fp, $headers.$body."\r\n.\r\n"); $read();
   $cmd("QUIT"); fclose($fp);
 }

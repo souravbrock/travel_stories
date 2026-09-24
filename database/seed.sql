@@ -2,10 +2,11 @@
 -- Import with: mysql --default-character-set=utf8mb4 ... < seed.sql
 USE `reddevil_tstory`;
 
--- Admin: register admin@reddevils.co.in via the site (OTP + password), then promote:
---   UPDATE users SET role='admin' WHERE email='admin@reddevils.co.in';
+-- Admin: the owner registers souravbrock@gmail.com via the site (OTP + password).
+-- Pre-provisioned here as unverified admin; auth_register() preserves the admin role.
+--   (After they verify + set password, they can log in as admin.)
 INSERT IGNORE INTO users (name,email,phone,role,is_verified) VALUES
-('Site Admin','admin@reddevils.co.in','+91-9800000000','customer',0);
+('Sourav','souravbrock@gmail.com','+91-9800000000','admin',0);
 
 INSERT IGNORE INTO states (name,slug,best_time,peak_note,highlights,color) VALUES
 ('West Bengal','west-bengal','Winter (Oct-Mar)','Peak: Dec-Jan for Darjeeling and Sundarbans','Darjeeling Himalayas - Sundarbans - Digha - Kalimpong','#e74c3c'),

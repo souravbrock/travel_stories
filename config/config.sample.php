@@ -14,14 +14,16 @@ return [
     'charset' => 'utf8mb4',
   ],
 
-  // OTP email. Prefer cPanel email account (e.g. noreply@reddevils.co.in).
-  // Uses PHP mail() by default; set smtp_* to use SMTP via sockets (no composer needed).
+  // Registration + general communication go from no-reply; all booking mail from booking.
+  // Uses PHP mail() by default; set use_smtp=true to use SMTP via sockets (no composer needed).
   'mail' => [
-    'from' => 'Travel Stories <noreply@reddevils.co.in>',
+    'from_noreply' => 'Travel Stories <no-reply@tstory.reddevils.co.in>',
+    'from_booking' => 'Travel Stories Bookings <booking@tstory.reddevils.co.in>',
+    'notify_booking' => 'booking@tstory.reddevils.co.in', // lead inbox for platform-managed bookings
     'use_smtp' => false,
     'smtp_host' => 'mail.reddevils.co.in',
     'smtp_port' => 465,
-    'smtp_user' => 'noreply@reddevils.co.in',
+    'smtp_user' => 'no-reply@tstory.reddevils.co.in',
     'smtp_pass' => 'CHANGE_ME',
     'smtp_secure' => 'ssl', // ssl | tls
   ],

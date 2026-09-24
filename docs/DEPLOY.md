@@ -29,7 +29,7 @@ So: `cp -R ~/travel_stories/public/* ~/public_html/tstory/ && cp -R ~/travel_sto
 
 ## 4. Config
 1. Copy `config/config.sample.php` → `config/config.php` (on server), fill: DB name/user/pass, `app_url=https://tstory.reddevils.co.in`, `AUTH_SECRET` (random 32+ chars), mail from `noreply@reddevils.co.in`.
-2. cPanel → **Email Accounts** → create `noreply@reddevils.co.in` → use its SMTP (`mail.reddevils.co.in:465`) or leave `use_smtp=false` to use PHP `mail()` (deliverability lower; OTPs also logged to `storage/otp.log` for debugging).
+2. cPanel → **Email Accounts** → `no-reply@tstory.reddevils.co.in` (registration + general mail) and `booking@tstory.reddevils.co.in` (all booking mail, incl. platform-booking leads) already exist. Passwords are with the site owner.
 3. cPanel → **MultiPHP Manager** → set `tstory` to PHP 8.1/8.2.
 4. Test: `https://tstory.reddevils.co.in/api/health.php` → `{"ok":true...}`.
 

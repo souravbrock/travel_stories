@@ -53,20 +53,30 @@ function issue_token(int $uid): string {
   db()->prepare("INSERT INTO auth_tokens (user_id, token, expires_at) VALUES (?,?,DATE_ADD(NOW(), INTERVAL $days DAY))")->execute([$uid,$tok]);
   return $tok;
 }
-function send_otp_mail(string $email, string $code): void {
+function send_mail(string $to, string $subject, string $body, string $from): void {
   $c = cfg();
-  $subject = "Your Travel Stories verification code: $code";
-  $msg = "Namaste from Travel Stories!\n\nYour 5-digit verification code is: $code\nIt expires in 15 minutes.\n\nIf you did not request this, ignore this email.";
-  $headers = "From: {$c['mail']['from']}\r\nReply-To: {$c['mail']['from']}";
   if (!$c['mail']['use_smtp']) {
-    @mail($email, $subject, $msg, $headers);
-    // Always log for deliverability debugging on shared hosting
-    @file_put_contents(__DIR__.'/../storage/otp.log', date('c')." $email $code\n", FILE_APPEND);
+    $headers = "From: $from\r\nReply-To: $from";
+    @mail($to, $subject, $body, $headers);
     return;
   }
   // Minimal SMTP client (no composer dependency, works on cPanel)
   require_once __DIR__.'/smtp.php';
-  smtp_send($c['mail'], $email, $subject, $msg);
+  smtp_send($c['mail'], $from, $to, $subject, $body);
+}
+function send_otp_mail(string $email, string $code): void {
+  $c = cfg();
+  $subject = "Your Travel Stories verification code: $code";
+  $msg = "Namaste from Travel Stories!\n\nYour 5-digit verification code is: $code\nIt expires in 15 minutes.\n\nIf you did not request this, ignore this email.";
+  try {
+    send_mail($email, $subject, $msg, $c['mail']['from_noreply']);
+  } finally {
+    // Always log for deliverability debugging on shared hosting
+    @file_put_contents(__DIR__.'/../storage/otp.log', date('c')." $email $code\n", FILE_APPEND);
+  }
+}
+function send_booking_mail(string $to, string $subject, string $body): void {
+  send_mail($to, $subject, $body, cfg()['mail']['from_booking']);
 }
 function cors(): void {
   // Same-origin by default; relax only if app_url differs (Android WebView)
