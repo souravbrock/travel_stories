@@ -2,6 +2,8 @@ name: Build Android APK
 
 on:
   push:
+    branches: ['main']
+    paths: ['mobile/**', '.github/workflows/android.yml']
     tags: ['v*']
   workflow_dispatch:
 
@@ -31,11 +33,11 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install SDK packages
+      - name: Setup Android SDK packages
         run: |
+          echo "Runner SDK: $ANDROID_HOME"
+          ls "$ANDROID_HOME/cmdline-tools"
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           yes | sdkmanager --licenses > /dev/null
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
