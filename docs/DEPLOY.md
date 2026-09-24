@@ -44,6 +44,7 @@ git push -u origin main
 Then cPanel Git tool can **Pull** on each push, or add webhook. After pull, re-run the `cp` step (or automate via `.cpanel.yml`).
 
 ## 6. Troubleshooting
+- Unstyled page / 403 on `/assets/*`: directories uploaded via scp default to `700`, which the web server user can't traverse. Fix: `find ~/public_html/tstory -type d -exec chmod 755 {} \;` and files `644` (keep `config/` + `storage/` at `750`, `config.php` at `640`).
 - 500 + "config.php missing": you didn't copy sample → config on server.
 - DB connect fail: check `DB_HOST=localhost` (DomainAdda shared uses localhost), user has privileges, password correct.
 - OTP mail in spam: add SPF `v=spf1 +a +mx include:domainadda.com ~all` in **Zone Editor**, enable DKIM in **Email Deliverability**.
