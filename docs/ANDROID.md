@@ -16,10 +16,11 @@ tstory-android/
 
 ## Prereqs (one-time, Windows)
 
-1. JDK 17: `winget install EclipseAdoptium.Temurin.17.JDK`
+1. JDK 21: `winget install EclipseAdoptium.Temurin.21.JDK` (Capacitor 7.4+
+   targets Java 21)
 2. Android cmdline-tools → `C:\Android\Sdk\cmdline-tools\latest`
-3. `sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"`
-4. Env: `JAVA_HOME=<jdk>`, `ANDROID_SDK_ROOT=C:\Android\Sdk`
+3. `sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"`
+4. Env: `JAVA_HOME=<jdk21>`, `ANDROID_SDK_ROOT=C:\Android\Sdk`
 
 ## Rebuild the APK
 
