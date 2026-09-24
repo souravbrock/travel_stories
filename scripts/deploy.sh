@@ -7,9 +7,15 @@ HOST=reddevil@kaveri.domainadda.com
 KEY="$HOME/.ssh/cpanel-deploy"
 DOC=~/public_html/tstory
 
-if [ -z "${SSH_CLIENT:-}" ]; then
+if [ -f ~/.tstory_dbpw ]; then
+  # marker file exists only on the server: run the server half here
+  MODE=server
+else
+  MODE=${1:-local}
+fi
+if [ "$MODE" = "local" ]; then
   # running locally: execute the server half over SSH
-  ssh -i "$KEY" "$HOST" "bash ~/travel_stories/scripts/deploy.sh"
+  ssh -i "$KEY" "$HOST" 'bash ~/travel_stories/scripts/deploy.sh server'
   echo DONE
   exit 0
 fi
