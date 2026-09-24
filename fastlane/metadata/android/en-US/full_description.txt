@@ -1,0 +1,6 @@
+Travel Stories is a travel platform for India: explore states and districts on an
+interactive map, book curated travel-agent packages, or build your own trip
+with transit, local vehicles, hotels/homestays and meal planning.
+
+Accounts: customers, vendors (agents, hotels, homestays, transport) and admins.
+Companion to https://tstory.reddevils.co.in

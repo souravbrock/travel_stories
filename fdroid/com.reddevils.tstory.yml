@@ -1,0 +1,39 @@
+# Draft recipe for fdroiddata/metadata/com.reddevils.tstory.yml
+# Copy into a fdroiddata fork as metadata/com.reddevils.tstory.yml and open an MR.
+Categories:
+  - Travel & Local
+License: MIT
+AuthorName: Travel Stories
+WebSite: https://tstory.reddevils.co.in
+SourceCode: https://github.com/souravbrock/travel_stories
+IssueTracker: https://github.com/souravbrock/travel_stories/issues
+
+AutoName: Travel Stories
+Description: |-
+  Travel Stories is a travel platform for India: explore states and districts
+  on an interactive map, book curated travel-agent packages, or build your own
+  trip with transit, local vehicles, hotels/homestays and meal planning.
+
+RepoType: git
+Repo: https://github.com/souravbrock/travel_stories.git
+
+Builds:
+  - versionName: '1.0'
+    versionCode: 1
+    commit: v1.0.0
+    subdir: mobile
+    sudo:
+      - apt-get update
+      - apt-get install -y nodejs npm
+    prebuild:
+      - npm ci
+      - npx cap sync android
+    gradle:
+      - yes
+    output: android/app/build/outputs/apk/debug/app-debug.apk
+
+AutoUpdateMode: Version v%v
+UpdateCheckMode: Tags
+UpdateCheckData: https://github.com/souravbrock/travel_stories/tags
+CurrentVersion: '1.0'
+CurrentVersionCode: 1

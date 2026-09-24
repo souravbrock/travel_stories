@@ -1,3 +1,10 @@
 config/config.php
 storage/otp.log
 .DS_Store
+# Android wrapper build outputs (source stays, outputs are CI-built)
+mobile/node_modules/
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/capacitor-cordova-android-plugins/build/
+mobile/android/local.properties
+mobile/*.apk

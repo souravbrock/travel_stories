@@ -1,5 +1,9 @@
 # Travel Stories — tstory.reddevils.co.in
 
+[![Build Android APK](../../actions/workflows/android.yml/badge.svg)](../../actions/workflows/android.yml)
+
+📱 **Get the Android app:** [Latest release](../../releases/latest) (`travel-stories-v*.apk`) — or auto-update via [Obtanium](https://github.com/ImranR98/Obtainium) pointed at this repo. Details: `docs/GET_THE_APP.md`. F-Droid submission pack: `fdroid/`.
+
 Responsive web app + PWA (wrappable as Android app via Capacitor) + PHP/MySQL API, designed for DomainAdda shared cPanel hosting.
 
 Live target: `https://tstory.reddevils.co.in`
