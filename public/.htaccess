@@ -1,0 +1,14 @@
+RewriteEngine On
+# Forward Authorization header to PHP (needed on php-fpm/CGI setups)
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+# API passthrough (if api/ lives beside public/, adjust per DEPLOY.md)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ ../api/$1 [L]
+# Force HTTPS in production
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+<FilesMatch "\.(css|js|png|jpg|geojson)$">
+Header set Cache-Control "public, max-age=86400"
+</FilesMatch>

@@ -1,0 +1,8 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/reddevil/public_html/tstory/
+    - /bin/cp -R public/* $DEPLOYPATH
+    - /bin/cp -R api $DEPLOYPATH/../tstory-api
+    # Then set subdomain docroot to public_html/tstory (see docs/DEPLOY.md).
+    # DB config lives in /home/reddevil/tstory-config/config.php (outside public_html).
